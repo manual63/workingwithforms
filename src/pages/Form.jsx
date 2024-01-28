@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import ActionButton from "../common/ActionButton";
 import ActionButtons from "../common/ActionButtons";
@@ -16,8 +16,6 @@ const FormInputs = () => {
 }
 
 const Form = () => {
-    const { reset } = useForm()
-    const [name, setName] = useState("");
     const methods = useForm();
 
     const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -33,13 +31,12 @@ const Form = () => {
     const onError = (errors, e) => console.log(errors, e)
 
     const clearName = () => {
-        setName("");
-        reset();
+        setCurrentUser({firstName: "", lastName: ""});
+        methods.reset();
     };
 
-    const resetName = () => {
-        setName("Shad Holland");
-        reset();
+    const goBack = () => {
+        history.back();
     };
 
     return (
@@ -54,7 +51,7 @@ const Form = () => {
 
             Name: {`${currentUser.firstName} ${currentUser.lastName}`}
             <ActionButtons>
-                <ActionButton action={resetName} text="Reset Name" />
+                <ActionButton action={goBack} text="< Back" />
                 <ActionButton action={clearName} text="Clear Name" />
             </ActionButtons>
         </>
