@@ -1,29 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-
-// A genaric button so it can be reused
-const ActionButton = ({ action, text }) => {
-    const buttonStyles = {
-        padding: "5px 10px",
-        margin: "10px"
-    }
-
-    return (
-        <>
-            <button style={buttonStyles} onClick={() => action()}>{text}</button>
-        </>
-    )
-};
-
-// Organizing buttons under a heading to test passing in child components
-const ActionButtons = ({ children }) => {
-    return (
-        <>
-            <h3>Action Buttons</h3>
-            <div>{children}</div>
-        </>
-    )
-}
+import ActionButton from "../common/ActionButton";
+import ActionButtons from "../common/ActionButtons";
+import UserContext from "../contexts/UserContext";
 
 // Nested inputs is why you would use the useFormContext() method
 const FormInputs = () => {
@@ -37,12 +16,18 @@ const FormInputs = () => {
 }
 
 const Form = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const { reset } = useForm()
     const [name, setName] = useState("");
     const methods = useForm();
 
+    const { currentUser, setCurrentUser } = useContext(UserContext);
+
     const onSubmit = (data) => {
-        setName(`${data.firstName} ${data.lastName}`);
+        const user = {
+            firstName: data.firstName,
+            lastName: data.lastName
+        }
+        setCurrentUser(user);
     }
 
     const onError = (errors, e) => console.log(errors, e)
@@ -67,7 +52,7 @@ const Form = () => {
                 </form>
             </FormProvider>
 
-            Name: {name}
+            Name: {`${currentUser.firstName} ${currentUser.lastName}`}
             <ActionButtons>
                 <ActionButton action={resetName} text="Reset Name" />
                 <ActionButton action={clearName} text="Clear Name" />
